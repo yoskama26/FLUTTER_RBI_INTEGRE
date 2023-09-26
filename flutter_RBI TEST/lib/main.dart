@@ -200,7 +200,7 @@ class _ConnexionState extends State<Connexion> {
   }
 
 }
-
+// J'AI FAIT DES MODIFS DE LA
 class _HomeState extends State<Home> {
   List<String> yourListOfOptions = [];
   String selectedResponsableActivite = ""; // Variable pour stocker la valeur sélectionnée
@@ -499,9 +499,6 @@ class _HomeState extends State<Home> {
               ],
             ),
 
-
-            // J'AI FAIT DES MODIFS DE LA
-
             TextFormField(
               controller: actionController,
               decoration: InputDecoration(
@@ -512,7 +509,7 @@ class _HomeState extends State<Home> {
                   borderRadius: BorderRadius.circular(10.0),
                 ),
                 filled: true,
-                hintText: 'Action', // Le texte indicatif
+                hintText: 'Actions', // Le texte indicatif
               ),
               minLines: 1,
               keyboardType: TextInputType.multiline,
@@ -535,7 +532,7 @@ class _HomeState extends State<Home> {
                           _selectDate(context, 2); // Utilisez 2 pour le deuxième calendrier
                         },
                       ),
-                      Text('Fin Action :'
+                      Text('Fin Actions :'
                           ' ${selectedDate2 != null ? DateFormat('dd/MM/yyyy').format(selectedDate2!) : ''}'),
                     ],
                   ),
@@ -807,7 +804,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-
+// A DE LA
   Future<String?> _getId() async {
     var deviceInfo = DeviceInfoPlugin();
     String? deviceId;
