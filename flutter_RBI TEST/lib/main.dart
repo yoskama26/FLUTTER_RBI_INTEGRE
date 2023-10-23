@@ -1,3 +1,5 @@
+
+// ensembles des lib que j'utilise
 import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/services.dart';
@@ -11,6 +13,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:intl/intl.dart';
 
+//définitions du menu pricipale ici qui s'appel "home"
 void main() {
   runApp(
     MaterialApp(
@@ -24,6 +27,8 @@ void main() {
 }
 
 //============== Classes ==============
+
+
 class Connexion extends StatefulWidget {
   const Connexion({Key? key}) : super(key: key);
 
@@ -53,6 +58,7 @@ class MesFiches extends StatefulWidget {
 }
 
 //============ States classes ============
+//Création des différentes pages
 class _ConnexionState extends State<Connexion> {
   TextEditingController textController = TextEditingController();
   TextEditingController textController2 = TextEditingController();
@@ -61,6 +67,7 @@ class _ConnexionState extends State<Connexion> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      //ici on défini la taille et les différentes valeurs que l'on souhaite donner a notre page
       debugShowCheckedModeBanner: false,
       builder: (context, widget) => ResponsiveWrapper.builder(
           BouncingScrollWrapper.builder(context, widget!),
@@ -88,6 +95,7 @@ class _ConnexionState extends State<Connexion> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
+                //Chaque Container contient le contenu de l'application ici l'image par exemple ou il faut définir les parametres directement a la création de l'objet
                 width: 600,
                 height: 540,
                 decoration: const BoxDecoration(
@@ -172,7 +180,7 @@ class _ConnexionState extends State<Connexion> {
       });
     });
   }
-
+//appel du script pour voir si les mdp correspondes a ceux écrit par rapport au Matricule
   Future<String> checkMDP(MATR, MDP) async {
     final url = Uri.parse('https://outils-casino.fr/checkMDP.php')
         .replace(queryParameters: {
@@ -200,8 +208,13 @@ class _ConnexionState extends State<Connexion> {
   }
 
 }
-// J'AI FAIT DES MODIFS DE LA
+// ici la nouvelle page de séléction de type de magasin
+
+
+
+// Ici c'est la page principale du l'app et la classes gerent l'ensemble de l'application (ligne 271 -> 950+)
 class _HomeState extends State<Home> {
+
   List<String> yourListOfOptions = [];
   String selectedResponsableActivite = ""; // Variable pour stocker la valeur sélectionnée
   String uploadEndPoint = 'https://outils-casino.fr/image_upload.php';
@@ -212,7 +225,7 @@ class _HomeState extends State<Home> {
   String errMessage = 'Error Uploading Image';
   String? _selectMagasin;
   String? _selectTheme;
-  String? _selectResponsable;
+  String? _selectResponsable = "Non défini";
   String? _deviceIdMatricule;
   String? _deviceId;
   TextEditingController textController = TextEditingController();
@@ -223,11 +236,13 @@ class _HomeState extends State<Home> {
   DateTime now = DateTime.now();
   DateTime? selectedDate1;
   DateTime? selectedDate2;
+  String? _selectedMagasin;
   @override
   void initState() {
     super.initState();
     // Initialiser selectedDate1 à la date du jour
     selectedDate1 = DateTime.now();
+
   }
   String currentDate = DateFormat('y-MM-dd').format(DateTime.now());
   @override
@@ -247,8 +262,10 @@ class _HomeState extends State<Home> {
       selectedDate2 = DateTime.parse(arguments['Date_Fin']);
       _selectResponsable = arguments['Responsable'];
 
-
+    }else{
+// C'est la que j'essaye de faire en sorte que le magasins reste enregistré
     }
+    // en dessous ce trouve l'ensemble de l'affichage du menu principale ou on peut remplir la fiche
     arguments.clear();
     return Scaffold(
       backgroundColor: Color.fromRGBO(255,255,255, 1),
@@ -294,6 +311,7 @@ class _HomeState extends State<Home> {
                   }
                   return
                     Container(
+                      //Ici le choix du magasins
                         height: 30,
                         child: DropdownButton<String>(
                           isExpanded: true,
@@ -320,6 +338,7 @@ class _HomeState extends State<Home> {
               },
             ),
             FutureBuilder(
+              //ici on select dans la table theme-integré pour afficher dans la liste déroulante les différents theme possible
               future: getData('SELECT DISTINCT No_Theme_Sujet FROM theme_integre', 'No_Theme_Sujet'),
               builder: (BuildContext context,
                   AsyncSnapshot<dynamic> snapshot) {
@@ -358,7 +377,7 @@ class _HomeState extends State<Home> {
                 }
               },
             ),
-
+            // Ici c'est la gestion de la photos avec l'image de rubis cube au centre
             if(tmpFile != null)
               Container(
                 width: 320,
@@ -396,6 +415,7 @@ class _HomeState extends State<Home> {
               height: 10,
             ),
             TextFormField(
+              // Ici la zone de texte d'observation
               controller: textController,
               decoration: InputDecoration(
                 fillColor: Colors.white,
@@ -412,21 +432,32 @@ class _HomeState extends State<Home> {
               maxLines: 20,
             ),
             Row(
+              // Row permet de faire comprendre a l'application que l'ont souhaite mettre les bouton/elements a coté les uns des autres et pas en dessous (row = colonnes)
               children: [
                 Expanded(
                   child: Container(
+                    // ici on donne la note
                     alignment: Alignment.center,
                     child: Card(
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
-                        //mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           IconButton(
                             icon: const Icon(Icons.remove),
                             onPressed: () => _itemCountDecrease(),
                           ),
-                          Text(Note.toString()),
+                          const SizedBox(width: 15,),
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                Note = 11;
+                              });
+                            },
+                            // ici c'est si la note est egal a 11 l'affichage montre ø a la place et plus tard en dessous je change la valeur de 11
+                            child: Note == 11 ? Text("Ø") : Text(Note.toString()),
+                          ),
+                          const SizedBox(width: 15,),
                           IconButton(
                             icon: const Icon(Icons.add),
                             onPressed: () => _itemCountIncrease(),
@@ -436,11 +467,15 @@ class _HomeState extends State<Home> {
                     ),
                   ),
                 ),
+
+
                 const SizedBox(width: 20,),
                 Expanded(
+                  //ici c'est la date
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
+
                       IconButton(
                         icon: Icon(Icons.calendar_today),
                         color: Colors.red,
@@ -449,8 +484,8 @@ class _HomeState extends State<Home> {
                           _selectDate(context, 1); // Utilisez 1 pour le premier calendrier
                         },
                       ),
+                      Text('Contrôle du ${selectedDate1 != null ? DateFormat('dd/MM/yyyy').format(selectedDate1!) : DateFormat('dd/MM/yyyy').format(DateTime.now())}'),
 
-                      Text('Contrôle du : ${selectedDate1 != null ? DateFormat('dd/MM/yyyy').format(selectedDate1!) : DateFormat('dd/MM/yyyy').format(DateTime.now())}'),
 
                     ],
                   ),
@@ -463,6 +498,7 @@ class _HomeState extends State<Home> {
             Row(
               children: [
                 Expanded(
+                  //Ici on fait un appel au téléphone pour lui demander d'utiliser la caméra du tel si besoin (bouton appareil photo)
                   child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -481,6 +517,7 @@ class _HomeState extends State<Home> {
                 ),
                 const SizedBox(width: 20,),
                 Expanded(
+                  // Pareil que pour l'apareil photo sauf que cette fois on demande l'acces a la galerie du téléphone
                   child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -498,49 +535,23 @@ class _HomeState extends State<Home> {
                 )
               ],
             ),
+            Row(
+              //ici c'est juste le texte de choix responsable au dessus car ne pouvant pas l'utiliser en placeholder
+                children: [
+                  const SizedBox(width: 20,),
+                  Text("\nChoix responsable :"),
+                ]
 
-            TextFormField(
-              controller: actionController,
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                focusColor: Colors.red,
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.grey),
-                  borderRadius: BorderRadius.circular(10.0),
-                ),
-                filled: true,
-                hintText: 'Actions', // Le texte indicatif
-              ),
-              minLines: 1,
-              keyboardType: TextInputType.multiline,
-              maxLines: 20,
             ),
-
-
             Row(
               children: [
                 const SizedBox(width: 20,),
+
                 Expanded(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      IconButton(
-                        icon: Icon(Icons.calendar_today),
-                        color: Colors.red,
-                        iconSize: 30,
-                        onPressed: () {
-                          _selectDate(context, 2); // Utilisez 2 pour le deuxième calendrier
-                        },
-                      ),
-                      Text('Fin Actions :'
-                          ' ${selectedDate2 != null ? DateFormat('dd/MM/yyyy').format(selectedDate2!) : ''}'),
-                    ],
-                  ),
-                ),
-                const SizedBox(width: 20,), // Espace entre les deux éléments
-                Expanded(
+                  // et la c'est le menu déroulant du choix responsable avec une valeur par défaut
+
                   child: FutureBuilder(
-                    future: getData('SELECT DISTINCT RESP_ACT FROM int_liste_resp_act', 'RESP_ACT'),
+                    future: getData('SELECT DISTINCT `RESP_ACT` from int_liste_resp_act ORDER BY ORDRE', 'RESP_ACT'),
                     builder: (BuildContext context, AsyncSnapshot<dynamic> snapshot) {
                       if (snapshot.connectionState == ConnectionState.done && snapshot.hasData && snapshot.data != null) {
                         List<String> listeThemes = [];
@@ -573,13 +584,51 @@ class _HomeState extends State<Home> {
                     },
                   ),
                 ),
+
+                Expanded(
+                  // Encore le choix de date
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+
+                      IconButton(
+                        icon: Icon(Icons.calendar_today),
+                        color: Colors.red,
+                        iconSize: 30,
+                        onPressed: () {
+                          _selectDate(context, 2); // Utilisez 2 pour le deuxième calendrier
+                        },
+                      ),
+                      Text('Fin Actions'
+                          ' ${selectedDate2 != null ? DateFormat('dd/MM/yyyy').format(selectedDate2!) : ''}'),
+                    ],
+                  ),
+                ),
+
+
               ],
+            ),
+// ici une zone de texte pour Actions
+            TextFormField(
+              controller: actionController,
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                focusColor: Colors.red,
+                enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(10.0),
+                ),
+                filled: true,
+                hintText: 'Actions', // Le texte indicatif
+              ),
+              minLines: 1,
+              keyboardType: TextInputType.multiline,
+              maxLines: 20,
             ),
 
 
-             // A DE LA
-
             Row(
+              // enfin ici le bouton enregistrer qui envoi les données
               children: [
                 Expanded(
                   child: ElevatedButton(
@@ -663,17 +712,39 @@ class _HomeState extends State<Home> {
   }
 
   Future insertData(monImage) async {
+
+    // Ici c'est la manipulation et la mise en forme des données entré précedement
+
+    actionController.text ??= 'R.A.S';
+    textController.text ??= 'R.A.S';
+
+
     String monComm2 = actionController.text;
     String monMag = _selectMagasin!.substring(0, 5);
     String monMotif = _selectTheme!.replaceAll('"', '');
     String monResponsable = _selectResponsable!.replaceAll('"', '');
-
-
     String monComm = textController.text;
-    int maNote = Note;
-    String dateVisite = DateFormat('y-MM-dd').format(selectedDate1!); // Format de date ISO 8601
-    String dateFin = DateFormat('y-MM-dd').format(selectedDate2!); // Format de date ISO 8601
+    // ici par exemple je transforme la note qui été un "Entier" en chaine de caractere afin de pouvoir mettre a la a ø deux lignes en dessous
+    String maNote = Note.toString();
 
+    if(maNote == '11'){
+      maNote = 'ø';
+    }
+    // Ici je défini la date de base
+    selectedDate2 ??= DateTime(0, 0, 0);
+
+    String dateVisite = DateFormat('y-MM-dd').format(selectedDate1!);
+    String dateFin = DateFormat('y-MM-dd').format(selectedDate2!);
+
+    if (selectedDate2!.isBefore(DateTime(1, 11, 30)) || selectedDate2!.isAtSameMomentAs(DateTime(1, 11, 30))) {
+      dateFin = '0000-00-00';
+    }
+
+    if (selectedDate1!.isBefore(DateTime(1, 11, 30)) || selectedDate1!.isAtSameMomentAs(DateTime(1, 11, 30))) {
+      dateVisite = '0000-00-00';
+    }
+
+    // Ici c'est la requetes SQL qu'on envoi directement au serveur pour mettre a jour l'application
     final url = Uri.parse('https://outils-casino.fr/insert.php')
         .replace(queryParameters: {
       'req': "INSERT INTO fiche_visite_integre (Code_CM, Motif_Visite, Matricule_creation, Rapport_Visite, IMAGE_1, NOTE_1, Date_Visite, Responsable, Action, Date_Fin) VALUES ('$monMag', '$monMotif', '$_deviceIdMatricule', '$monComm', '$monImage', '$maNote', '$dateVisite', '$monResponsable', '$monComm2', '$dateFin')",
@@ -682,15 +753,34 @@ class _HomeState extends State<Home> {
   }
 
   Future updateData(id, [fileP]) async {
+    // et Ici c'est exactement comme en haut sauf que c'est pour la modifications des fiches
+
+    actionController.text ??= 'vide';
+    textController.text ??= 'vide';
+
     String monMag = _selectMagasin!.substring(0, 5);
     String monMotif = _selectTheme!.replaceAll('"', '');
     String monResponsable = _selectResponsable!.replaceAll('"', '');
     String monComm = textController.text;
     String monComm2 = actionController.text;
 
-    int maNote = Note;
-    String dateVisite = DateFormat('y-MM-dd').format(selectedDate1!); // Format de date ISO 8601
-    String dateFin = DateFormat('y-MM-dd').format(selectedDate2!); // Format de date ISO 8601
+    String maNote = Note.toString();
+    if(maNote == '11'){
+      maNote = 'ø';
+    }
+
+    selectedDate2 ??= DateTime(0, 0, 0);
+
+    String dateVisite = DateFormat('y-MM-dd').format(selectedDate1!);
+    String dateFin = DateFormat('y-MM-dd').format(selectedDate2!);
+
+    if (selectedDate2!.isBefore(DateTime(1, 11, 30)) || selectedDate2!.isAtSameMomentAs(DateTime(1, 11, 30))) {
+      dateFin = '0000-00-00';
+    }
+
+    if (selectedDate1!.isBefore(DateTime(1, 11, 30)) || selectedDate1!.isAtSameMomentAs(DateTime(1, 11, 30))) {
+      dateVisite = '0000-00-00';
+    }
 
     String? monImage = "";
     if(fileP!=null) {
@@ -725,8 +815,8 @@ class _HomeState extends State<Home> {
         );
       },
     );
-
-    if (_selectMagasin != null && _selectTheme != null) {
+// ici c'est le check de tout ce qui est obligatoire dans notre cas : le mag, le theme, la date et le responsable (mais qui en a un par défaut)
+    if (_selectMagasin != null && _selectTheme != null && selectedDate1 != null && _selectResponsable != null) {
       String fileName = filePath != null ? "fdvrbs_" + basename(filePath.path) : "";
 
       try {
@@ -783,7 +873,7 @@ class _HomeState extends State<Home> {
         context: this.context,
         builder: (context) => AlertDialog(
           title: Text('Chargement...'),
-          content: Text('Veuillez renseigner un magasin et un thème au minimum...'),
+          content: Text('Veuillez renseigner un magasin et un theme au minimum...'),
           actions: [
             ElevatedButton(
               style: ButtonStyle(
@@ -804,7 +894,7 @@ class _HomeState extends State<Home> {
     }
   }
 
-// A DE LA
+
   Future<String?> _getId() async {
     var deviceInfo = DeviceInfoPlugin();
     String? deviceId;
@@ -842,8 +932,11 @@ class _FirstScreenState extends State<FirstScreen> {
   String? _deviceIdMatricule;
   String? _deviceId2;
 
+
+
   @override
   Widget build(BuildContext context) {
+    // Ici c'est l'affichage de la page de connexion
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, widget) => ResponsiveWrapper.builder(
@@ -876,7 +969,7 @@ class _FirstScreenState extends State<FirstScreen> {
                   ),
                 ),
               ),
-              Text('Version 1.0.4'),
+              Text('Version 1.0.5'),
               ElevatedButton(
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.resolveWith<Color>(
@@ -890,6 +983,8 @@ class _FirstScreenState extends State<FirstScreen> {
                   },
                   child: const Text('Connexion')
               ),
+
+
             ],
           ),
         ),
@@ -918,6 +1013,7 @@ class _FirstScreenState extends State<FirstScreen> {
         this.context,
         MaterialPageRoute(builder: (context) => Home()),
       );
+    return matric;
     } else {
       Navigator.push(
         this.context,
@@ -939,10 +1035,12 @@ class _MesFichesState extends State<MesFiches> {
   String? _selectedDateFin;
   String? _selectedAction;
   String? _selectedResponsable;
-
+  String? _deviceIdMatricule;
+  String? _deviceId;
 
   @override
   Widget build(BuildContext context) {
+    //Ici c'est l'affichage du menu édition
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       builder: (context, widget) => ResponsiveWrapper.builder(
