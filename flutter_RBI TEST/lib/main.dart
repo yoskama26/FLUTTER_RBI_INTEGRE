@@ -747,7 +747,7 @@ class _HomeState extends State<Home> {
     // Ici c'est la requetes SQL qu'on envoi directement au serveur pour mettre a jour l'application
     final url = Uri.parse('https://outils-casino.fr/insert.php')
         .replace(queryParameters: {
-      'req': "INSERT INTO fiche_visite_integre (Code_CM, Motif_Visite, Matricule_creation, Rapport_Visite, IMAGE_1, NOTE_1, Date_Visite, Responsable, Action, Date_Fin) VALUES ('$monMag', '$monMotif', '$_deviceIdMatricule', '$monComm', '$monImage', '$maNote', '$dateVisite', '$monResponsable', '$monComm2', '$dateFin')",
+      'req': "INSERT INTO fiche_visite_integre (Code_CM, Motif_Visite, Matricule_creation, Rapport_Visite, IMAGE_1, NOTE_1, Date_Visite, Responsable, Action, Date_Fin, Compilation) VALUES ('$monMag', '$monMotif', '$_deviceIdMatricule', '$monComm', '$monImage', '$maNote', '$dateVisite', '$monResponsable', '$monComm2', '$dateFin', '0')",
     });
     http.Response response = await http.post(url);
   }
